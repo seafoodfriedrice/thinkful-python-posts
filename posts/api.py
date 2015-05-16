@@ -8,6 +8,15 @@ import decorators
 from posts import app
 from database import session
 
+
+# JSON schema describing the structure of a post
+post_schema = {
+    "properties": {
+        "title": {"type": "string"},
+        "body": {"type": "string"}
+    },
+    "required": ["title", "body"]
+}
 @app.route("/api/posts", methods=["GET"])
 @decorators.accept("application/json")
 def posts_get():
