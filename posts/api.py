@@ -80,6 +80,14 @@ def posts_post():
     """ Add a new post """
     data = request.json
 
+    # Check that the JSON supplied is valid
+    # If not return a 422 Unprocessable Entity
+    try:
+        validate(data, post_schema)
+    except ValidationError as error:
+        data = {"message": error.message}
+        return Response(json.dumps(data), 422, mimetype="application/json")
+
     # Add the post to the database
     post = models.Post(title=data["title"], body=data["body"])
     session.add(post)
