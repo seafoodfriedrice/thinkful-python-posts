@@ -98,3 +98,31 @@ def posts_post():
     data = json.dumps(post.as_dictionary())
     headers = {"Location": url_for("post_get", id=post.id)}
     return Response(data, 201, headers=headers, mimetype="application/json")
+
+
+@app.route("/api/posts/<int:id>", methods=["PUT"])
+@decorators.accept("application/json")
+@decorators.require("application/json")
+def posts_put(id):
+    """ Add a new post """
+    data = request.json
+
+    # Check that the JSON supplied is valid
+    # If not return a 422 Unprocessable Entity
+    try:
+        validate(data, post_schema)
+    except ValidationError as error:
+        data = {"message": error.message}
+        return Response(json.dumps(data), 422, mimetype="application/json")
+
+    # Find post by id and modify
+    post = session.query(models.Post).filter(models.Post.id == id).first()
+    post.title, post.body  = data["title"], data["body"]
+    session.add(post)
+    session.commit()
+
+    # Return a 201 created, contain the post as JSON and with the
+    # Location header set to the location of the post
+    data = json.dumps(post.as_dictionary())
+    headers = {"Location": url_for("post_get", id=post.id)}
+    return Response(data, 201, headers=headers, mimetype="application/json")
