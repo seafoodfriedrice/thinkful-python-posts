@@ -282,7 +282,8 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.mimetype, "application/json")
 
-        # Change body of data that we will use in PUT request
+        # Change title and body of data that we will use in PUT request
+        data["title"] = "Title has been modified"
         data["body"] = "Body has been modified"
 
         response = self.client.put("/api/posts/1",
@@ -301,6 +302,7 @@ class TestAPI(unittest.TestCase):
             headers=[("Accept", "application/json")]
         )
         data = json.loads(response.data)
+        self.assertEqual(data["title"], "Title has been modified")
         self.assertEqual(data["body"], "Body has been modified")
 
 
