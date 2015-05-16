@@ -28,13 +28,27 @@ class TestAPI(unittest.TestCase):
 
     def testGetEmptyPosts(self):
         """ Getting posts from an empty database """
-        response = self.client.get("/api/posts")
+        response = self.client.get("/api/posts",
+            headers=[("Accept", "application/json")]
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
 
         data = json.loads(response.data)
         self.assertEqual(data, [])
+
+    def testUnsupportedAcceptHeader(self):
+        response = self.client.get("/api/posts",
+            headers=[("Accept", "application/xml")]
+        )
+
+        self.assertEqual(response.status_code, 406)
+        self.assertEqual(response.mimetype, "application/json")
+
+        data = json.loads(response.data)
+        self.assertEqual(data["message"],
+                         "Request must accept application/json data")
 
     def testGetPosts(self):
         """ Getting posts from a populated database """
