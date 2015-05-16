@@ -21,7 +21,7 @@ def posts_get():
     if title_like:
         posts = posts.filter(models.Post.title.contains(title_like))
     if body_like:
-        posts = posts.filter(models.Post.title.contains(body_like))
+        posts = posts.filter(models.Post.body.contains(body_like))
     posts = posts.all()
 
     # Convert the posts to JSON and return a response
