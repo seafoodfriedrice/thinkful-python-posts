@@ -232,7 +232,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(data["message"],
                          "Request must contain application/json data")
 
-     def testInvalidData(self):
+    def testInvalidData(self):
         """ Posting a post with an invalid body """
         data = {
             "title": "Example Post",
