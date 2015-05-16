@@ -9,6 +9,7 @@ from posts import app
 from database import session
 
 @app.route("/api/posts", methods=["GET"])
+@decorators.accept("application/json")
 def posts_get():
     """ Get a list of posts """
 
