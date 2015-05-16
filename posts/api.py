@@ -18,9 +18,14 @@ def posts_get():
 
     # Get and filter the posts from the database
     posts = session.query(models.Post)
-    if title_like:
+    if title_like and body_like:
+        posts = posts.filter(
+                    models.Post.title.contains(title_like),
+                    models.Post.body.contains(body_like)
+                    )
+    elif title_like:
         posts = posts.filter(models.Post.title.contains(title_like))
-    if body_like:
+    elif body_like:
         posts = posts.filter(models.Post.body.contains(body_like))
     posts = posts.all()
 
