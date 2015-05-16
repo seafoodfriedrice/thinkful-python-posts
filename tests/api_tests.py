@@ -267,5 +267,42 @@ class TestAPI(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data["message"], "'body' is a required property")
 
+    def testPutData(self):
+        """ Create new post that will be modified """
+        data = {
+            "title": "Example Post",
+            "body": "Example body"
+        }
+
+        response = self.client.post("/api/posts",
+            data=json.dumps(data),
+            content_type="application/json",
+            headers=[("Accept", "application/json")]
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.mimetype, "application/json")
+
+        # Change body of data that we will use in PUT request
+        data["body"] = "Body has been modified"
+
+        response = self.client.put("/api/posts/1",
+            data=json.dumps(data),
+            content_type="application/json",
+            headers=[("Accept", "application/json")]
+        )
+        # Verify new resource has been created
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.mimetype, "application/json")
+
+        # GET request to Post with id 1
+        response = self.client.get("/api/posts/1",
+            data=json.dumps(data),
+            content_type="application/json",
+            headers=[("Accept", "application/json")]
+        )
+        data = json.loads(response.data)
+        self.assertEqual(data["body"], "Body has been modified")
+
+
 if __name__ == "__main__":
     unittest.main()
