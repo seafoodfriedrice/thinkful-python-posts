@@ -14,6 +14,7 @@ def accept(mimetype):
             if mimetype in request.accept_mimetypes:
                 return func(*args, **kwargs)
             message = "Request must accept {} data".format(mimetype)
+            data = json.dumps({"message": message})
             return Response(data, 406, mimetype="application/json")
         return wrapper
     return decorator
