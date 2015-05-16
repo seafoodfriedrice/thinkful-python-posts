@@ -58,7 +58,9 @@ class TestAPI(unittest.TestCase):
         session.add_all([postA, postB])
         session.commit()
 
-        response = self.client.get("/api/posts")
+        response = self.client.get("/api/posts",
+            headers=[("Accept", "application/json")]
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
